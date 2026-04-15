@@ -1,116 +1,194 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meine Solo Leveling Webseite</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LevelUp</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-        }
+<style>
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0b0f1a;
+    color: white;
+}
 
-        header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
+/* HEADER */
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 40px;
+}
 
-        nav {
-            background-color: #34495e;
-            padding: 10px;
-        }
+.logo {
+    color: #a78bfa;
+    font-weight: bold;
+}
 
-        nav a {
-            color: white;
-            margin-right: 10px;
-            text-decoration: none;
-        }
+nav a {
+    margin-left: 20px;
+    color: #aaa;
+    text-decoration: none;
+}
 
-        section {
-            padding: 15px;
-            background-color: white;
-            margin: 10px;
-        }
+nav a:hover {
+    color: white;
+}
 
-        footer {
-            background-color: #2c3e50;
-            color: white;
-            text-align: center;
-            padding: 10px;
-        }
+/* LAYOUT */
+.container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 25px;
+    padding: 40px;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+/* HERO */
+.hero h1 {
+    font-size: 3rem;
+}
 
-        table, th, td {
-            border: 1px solid black;
-        }
+.hero span {
+    color: #8b5cf6;
+}
 
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+.hero p {
+    color: #9ca3af;
+}
+
+/* CARDS */
+.card {
+    background: #12182a;
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 0 20px rgba(139,92,246,0.1);
+}
+
+/* TASKS */
+.task {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px;
+    border-radius: 10px;
+    background: #0b0f1a;
+    margin-top: 10px;
+}
+
+.task:hover {
+    background: #1a2238;
+}
+
+/* PROGRESS */
+.progress-bar {
+    height: 8px;
+    background: #1f2937;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.progress {
+    height: 100%;
+    width: 65%;
+    background: linear-gradient(90deg, #8b5cf6, #c084fc);
+    border-radius: 10px;
+}
+
+/* RIGHT PANEL */
+.stats p {
+    margin: 5px 0;
+    color: #cbd5e1;
+}
+
+.level {
+    font-size: 1.5rem;
+    color: #a78bfa;
+}
+
+/* BUTTON */
+button {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #8b5cf6, #c084fc);
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+</style>
 </head>
 
 <body>
 
 <header>
-    <h1>Willkommen in meiner Solo Leveling Website</h1>
-    <p>Ich sammle Punkte durch Aufgaben</p>
+    <div class="logo">LevelUp</div>
+    <nav>
+        <a href="#">Dashboard</a>
+        <a href="#">Tasks</a>
+        <a href="#">Profil</a>
+    </nav>
 </header>
 
-<nav>
-    <a href="#">Home</a>
-    <a href="#">Profil</a>
-    <a href="#">Aufgaben</a>
-</nav>
+<div class="container">
 
-<section>
-    <h2>Über mich</h2>
-    <p>Ich studiere an der HTWG Konstanz und arbeite an einer Web-App.</p>
-</section>
+    <!-- LEFT -->
+    <div>
+        <div class="hero">
+            <h1>Track your life,<br><span>level it up</span></h1>
+            <p>Verwandle deine täglichen Aufgaben in Fortschritt und erreiche neue Level.</p>
+        </div>
 
-<section>
-    <h2>Meine Aufgaben (Liste)</h2>
-    <ul>
-        <li>Hausaufgaben machen</li>
-        <li>Sport treiben</li>
-        <li>Programmieren lernen</li>
-    </ul>
-</section>
+        <div class="card">
+            <h3>Daily Tasks</h3>
 
-<section>
-    <h2>Level Fortschritt (Tabelle)</h2>
-    <table>
-        <tr>
-            <th>Level</th>
-            <th>Punkte</th>
-        </tr>
-        <tr>
-            <td>Level 1</td>
-            <td>0 - 50 XP</td>
-        </tr>
-        <tr>
-            <td>Level 2</td>
-            <td>51 - 100 XP</td>
-        </tr>
-        <tr>
-            <td>Level 3</td>
-            <td>101 - 200 XP</td>
-        </tr>
-    </table>
-</section>
+            <div class="task">
+                <span>Workout</span>
+                <span>+50 XP</span>
+            </div>
 
-<footer>
-    <p>© 2026 Meine Website</p>
-</footer>
+            <div class="task">
+                <span>Lesen</span>
+                <span>+20 XP</span>
+            </div>
+
+            <div class="task">
+                <span>Programmieren</span>
+                <span>+40 XP</span>
+            </div>
+
+            <button>+ Aufgabe hinzufügen</button>
+        </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div>
+        <div class="card">
+            <h3>Status</h3>
+            <p class="level">Level 4</p>
+
+            <div class="progress-bar">
+                <div class="progress"></div>
+            </div>
+
+            <p>650 / 1000 XP</p>
+        </div>
+
+        <div class="card stats">
+            <h3>Stats</h3>
+            <p>Stärke: 12</p>
+            <p>Fokus: 9</p>
+            <p>Disziplin: 14</p>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
+
+<h1>WILLKOMMEN ZU SOLOLEVELING! PAGE FOLGT!!</h1>
