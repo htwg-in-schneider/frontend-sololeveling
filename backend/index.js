@@ -23,15 +23,16 @@ app.get("/health", async (req, res) => {
 });
 
 // GET TASKS
-app.get("/tasks/:id", async (req, res) => {
-  const { id } = req.params;
-
-  const [rows] = await db.query(
-    "SELECT * FROM tasks WHERE id = ?",
-    [id]
-  );
-
-  res.json(rows[0]);
+app.get("/tasks", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM tasks ORDER BY id DESC"
+    )
+    res.json(rows)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: "DB error" })
+  }
 });
 
 // CREATE TASK

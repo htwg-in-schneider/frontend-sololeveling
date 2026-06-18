@@ -1,7 +1,7 @@
 <template>
   <div class="page">
 
-    <Navbar />
+    
 
     <section class="hero-small">
       <h1>Deine Tasks</h1>

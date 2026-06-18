@@ -65,7 +65,7 @@ onMounted(async () => {
     description.value = data.description
     type.value = data.type || 'once'
     deadline.value = data.deadline || ''
-    interval.value = data.interval || ''
+    interval.value = data.interval_field || ''
 
   } catch (err) {
     console.error('Fehler beim Laden:', err)
