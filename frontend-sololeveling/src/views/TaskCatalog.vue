@@ -1,14 +1,7 @@
 <template>
   <div class="page">
-
-
-   
-
-    <!-- HERO -->
     <section class="hero" id="home">
-
       <div class="hero-left">
-
         <p class="subtitle">Solo Leveling</p>
 
         <h2>Verwandle dein Leben in ein episches Abenteuer</h2>
@@ -21,126 +14,56 @@
           Sammle XP und steige anhand deiner realen Erfolge vom F-Rang bis zum S-Rang auf.
         </p>
 
-       <SpecialBanner />
-
-        
-
+        <SpecialBanner />
       </div>
 
       <div class="hero-right">
         <img :src="flame" alt="Flamme">
       </div>
-
     </section>
 
-   
-
-    <!-- FEATURES -->
     <section class="features" id="features">
+      <div class="card">
+        <h3>Freunde</h3>
+        <p>
+          Du kannst dich mit deinen Freunden connecten und dich mit ihnen messen.
+          Werde der beste und sei im Ranking immer ganz oben.
+        </p>
+      </div>
 
-  <div class="card">
-    <h3>Freunde</h3>
-    <p>
-      Du kannst dich mit deinen Freunden connecten und dich mit ihnen messen.
-      Werde der beste und sei im Ranking immer ganz oben.
-    </p>
-  </div>
+      <div class="card">
+        <h3>Tasks</h3>
+        <p>
+          Tasks sind wie deine Währung. Du erstellst deine eigenen Tasks mit zugehörigen Zeiten um sie zu schaffen.
+          Wenn du deinen Task abschließt bekommst du XP und steigst im Level auf.
+          Wenn du es jedoch nicht schaffst verlierst du XP und möglicherweise auch ein Level.
+        </p>
+      </div>
 
-  <div class="card">
-    <h3>Tasks</h3>
-    <p>
-      Tasks sind wie deine Währung. Du erstellst deine eigenen Tasks mit zugehörigen Zeiten um sie zu schaffen.
-      Wenn du deinen Task abschließt bekommst du XP und steigst im Level auf.
-      Wenn du es jedoch nicht schaffst verlierst du XP und möglicherweise auch ein Level.
-    </p>
-  </div>
+      <div class="card">
+        <h3>Level</h3>
+        <p>
+          Level zeigen deinen Fortschritt. Für die ersten 2 Ranks musst du jeweils 5 Level aufsteigen und für alle weiteren bis S 10 Level pro Rank.
+          Wenn du Rank S erreichst bist du Teil der besten 5%.
+        </p>
+      </div>
+    </section>
 
-  <div class="card">
-    <h3>Level</h3>
-    <p>
-      Level zeigen deinen Fortschritt. Für die ersten 2 Ranks musst du jeweils 5 Level aufsteigen und für alle weiteren bis S 10 Level pro Rank.
-      Wenn du Rank S erreichst bist du Teil der besten 5%.
-    </p>
-  </div>
-
-</section>
-
-<TaskFilter @filter="applyFilter" />
-
-<section class="tasks">
-  <TaskCard
-    v-for="task in filteredTasks"
-    :key="task.id"
-    :task="task"
-  />
-  
-
-  <p v-if="filteredTasks.length === 0">
-    Keine Tasks vorhanden
-  </p>
-</section>
-
- <!-- CTA optional -->
-        <button class="cta" @click="$router.push('/tasks')">
-          Zu deinen Tasks
-        </button>
-
-        
-
-    <Footer />
-
+    <section class="ranking-section">
+      <img
+        :src="rankingImage"
+        alt="Rank Progression"
+        class="ranking-image"
+      />
+    </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue'
-
-import Navbar from '../components/Navbar.vue'
-import Footer from '../components/Footer.vue'
 import SpecialBanner from '../components/SpecialBanner.vue'
-import TaskCard from '../components/TaskCard.vue'
-import TaskFilter from '../components/TaskFilter.vue'
 
 import flame from '../assets/img/Flame.jpeg'
-
-const tasks = ref([])
-
-const filters = ref({
-  search: '',
-  type: ''
-})
-
-const filteredTasks = computed(() => {
-  return tasks.value.filter(task => {
-
-    const matchSearch =
-      task.name?.toLowerCase().includes(filters.value.search.toLowerCase())
-
-    const matchType =
-      !filters.value.type || task.type === filters.value.type
-
-    return matchSearch && matchType
-  })
-})
-
-function applyFilter(newFilters) {
-  filters.value = newFilters
-}
-
-const loadTasks = async () => {
-  try {
-    const res = await fetch('http://127.0.0.1:3000/tasks')
-    const data = await res.json()
-
-    tasks.value = Array.isArray(data) ? data : (data.tasks || [])
-  } catch (err) {
-    console.error(err)
-  }
-}
-
-onMounted(() => {
-  loadTasks()
-})
+import rankingImage from '../assets/img/Ranking.jpeg'
 </script>
 
 <style scoped>
@@ -150,7 +73,6 @@ onMounted(() => {
   color: white;
 }
 
-/* HERO */
 .hero {
   display: flex;
   justify-content: space-between;
@@ -178,11 +100,10 @@ onMounted(() => {
   border-radius: 0 0 50% 50%;
 }
 
-/* FEATURES */
 .features {
   display: flex;
   gap: 20px;
-  padding: 40px 80px;
+  padding: 40px 80px 20px;
 }
 
 .card {
@@ -192,27 +113,38 @@ onMounted(() => {
   background: rgba(0,0,0,0.15);
 }
 
-/* BUTTON */
-.cta {
-  margin-top: 20px;
-  padding: 10px 16px;
-  border: none;
-  border-radius: 10px;
-  background: #11001C;
-  color: white;
-  cursor: pointer;
+.ranking-section {
+  padding: 10px 80px 40px;
 }
 
-/* MOBILE */
+.ranking-image {
+  width: 30%;
+  min-width: 280px;
+  max-width: 350px;
+  border-radius: 20px;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .hero {
     flex-direction: column;
     text-align: center;
+    padding: 40px 24px;
   }
 
   .features {
     flex-direction: column;
     padding: 20px;
+  }
+
+  .ranking-section {
+    padding: 20px;
+  }
+
+  .ranking-image {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
   }
 }
 </style>

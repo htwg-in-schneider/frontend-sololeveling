@@ -1,13 +1,12 @@
 <template>
   <footer class="footer">
-
     <p>© 2026 Solo Leveling Tracker</p>
 
     <div class="links">
-      <FooterLink href="/impressum">Impressum</FooterLink>
-      <FooterLink href="/kontakt">Kontakt</FooterLink>
+      <FooterLink to="/impressum">Impressum</FooterLink>
+      <FooterLink to="/kontakt">Kontakt</FooterLink>
+      <FooterLink to="/datenschutz">Datenschutz</FooterLink>
     </div>
-
   </footer>
 </template>
 
@@ -19,7 +18,8 @@ import FooterLink from './FooterLink.vue'
 .footer {
   text-align: center;
   padding: 30px;
-  opacity: 0.7;
+  background: #e5e5e5;
+  color: black;
 }
 
 .links {
@@ -27,5 +27,6 @@ import FooterLink from './FooterLink.vue'
   display: flex;
   justify-content: center;
   gap: 15px;
+  flex-wrap: wrap;
 }
 </style>

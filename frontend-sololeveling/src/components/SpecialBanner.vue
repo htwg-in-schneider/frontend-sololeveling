@@ -7,9 +7,12 @@
 
       <p class="subtitle">Solo Leveling Habit Tracker System</p>
 
-      <button class="register-btn">
+      <button
+        class="register-btn"
+        @click="$router.push('/register')"
+       >
         Registrieren
-      </button>
+       </button>
 
     </div>
 

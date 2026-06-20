@@ -1,25 +1,32 @@
 <template>
-  <header class="navbar">
+ <header class="navbar">
+  <img class="logo" src="../assets/img/logo.jpeg" />
 
-    <img class="logo" src="../assets/img/logo.jpeg" />
+  <nav v-if="route.path === '/'" class="nav-buttons">
+    <a href="#features">Guide</a>
+    <a href="#home">Home</a>
+    <RouterLink to="/login">Anmelden</RouterLink>
+  </nav>
 
-    <nav class="nav-buttons">
-      <a href="#features">Guide</a>
-      <a href="#home">Home</a>
-      <a href="#">Anmelden</a>
-    </nav>
-
-    <div class="actions">
-      <Button variant="accent">Start</Button>
-    </div>
-
-    
-
-  </header>
+  <button
+    v-else
+    class="back-button"
+    @click="goBack"
+  >
+    Zurück
+  </button>
+ </header>
 </template>
 
 <script setup>
-import Button from './Button.vue'
+import { RouterLink, useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+
+function goBack() {
+  router.back()
+}
 </script>
 
 <style scoped>
@@ -57,6 +64,20 @@ import Button from './Button.vue'
 .actions {
   display: flex;
   align-items: center;
+}
+
+.back-button {
+  padding: 10px 20px;
+  background: #11001C;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  opacity: 0.85;
 }
 
 /* MOBILE */

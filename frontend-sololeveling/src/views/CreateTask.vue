@@ -52,12 +52,36 @@ const type = ref('once')
 const deadline = ref('')
 const interval = ref('')
 
+function parseDeadline(input) {
+  const value = input.trim().toLowerCase()
+
+  const match = value.match(/^(\d+)\s*(s|m|h|d|tag|tage)$/)
+
+  if (!match) {
+    return input
+  }
+
+  const amount = Number(match[1])
+  const unit = match[2]
+
+  const now = new Date()
+
+  if (unit === 's') now.setSeconds(now.getSeconds() + amount)
+  if (unit === 'm') now.setMinutes(now.getMinutes() + amount)
+  if (unit === 'h') now.setHours(now.getHours() + amount)
+  if (unit === 'd' || unit === 'tag' || unit === 'tage') {
+    now.setDate(now.getDate() + amount)
+  }
+
+  return now.toISOString()
+}
+
 async function createTask() {
   const payload = {
     name: name.value,
     description: description.value,
     type: type.value,
-    deadline: type.value === 'once' ? deadline.value : null,
+    deadline: type.value === 'once' ? parseDeadline(deadline.value) : null,
     interval: type.value === 'repeat' ? interval.value : null
   }
 
@@ -84,21 +108,60 @@ async function createTask() {
 
 <style scoped>
 .form {
-  padding: 40px;
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 20px;
   color: white;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
 }
 
-input, textarea {
-  padding: 10px;
-  border-radius: 8px;
+.form h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input,
+textarea {
+  padding: 14px 18px;
+  border-radius: 25px;
   border: none;
+  outline: none;
+  font-size: 15px;
+}
+
+textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 
 .type-select {
   display: flex;
-  gap: 20px;
+  gap: 15px;
+}
+
+.type-select label {
+  flex: 1;
+  background: #500d87;
+  padding: 12px;
+  border-radius: 25px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.type-select input[type="radio"] {
+  margin-right: 8px;
+}
+
+button {
+  margin-top: 10px;
+  padding: 14px;
+  border: none;
+  border-radius: 25px;
+  background: #11001c;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
 }
 </style>
