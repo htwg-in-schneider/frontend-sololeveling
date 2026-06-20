@@ -48,6 +48,23 @@ app.post("/tasks", async (req, res) => {
   res.json({ id: result.insertId, ...req.body });
 });
 
+app.patch("/tasks/:id/done", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { done } = req.body;
+
+    await db.query(
+      "UPDATE tasks SET done = ? WHERE id = ?",
+      [done, id]
+    );
+
+    res.json({ message: "Task done updated", done });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
+});
+
 // START
 app.listen(3000, () => {
   console.log("Server läuft auf http://localhost:3000");
@@ -65,4 +82,18 @@ app.put("/tasks/:id", async (req, res) => {
   );
 
   res.json({ message: "Task updated" });
+});
+
+//DELETE TASK
+app.delete("/tasks/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await db.query("DELETE FROM tasks WHERE id = ?", [id]);
+
+    res.json({ message: "Task deleted" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "DB error" });
+  }
 });
