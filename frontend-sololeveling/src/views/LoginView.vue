@@ -41,17 +41,39 @@ const email = ref('')
 const password = ref('')
 const error = ref('')
 
-function login() {
-  if (!email.value || !password.value) {
-    error.value = 'Bitte E-Mail und Passwort eingeben.'
-    return
+async function login() {
+  try {
+    const res = await fetch('http://127.0.0.1:3000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    })
+
+    const data = await res.json()
+
+    if (!res.ok) {
+      alert(data.error || 'Login fehlgeschlagen')
+      return
+    }
+
+    localStorage.setItem('isLoggedIn', 'true')
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('role', data.role)
+    localStorage.setItem('email', data.email)
+    localStorage.setItem('username', data.username)
+
+    if (data.role === 'admin') {
+      router.push('/admin')
+    } else {
+      router.push('/dashboard')
+    }
+  } catch (err) {
+    console.error(err)
+    alert('Backend nicht erreichbar')
   }
-
-  // Einfache Demo-Anmeldung für Aufgabe 5
-  localStorage.setItem('isLoggedIn', 'true')
-  localStorage.setItem('userEmail', email.value)
-
-  router.push('/dashboard')
 }
 </script>
 

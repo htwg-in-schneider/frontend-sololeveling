@@ -12,14 +12,22 @@
       </div>
 
       <div class="level-info">
-        <p>XP Fortschritt <span>467/1000xp</span></p>
+        <p>XP Fortschritt <span>{{xp}}/1000xp</span></p>
 
         <div class="xp-bar">
-          <div class="xp-fill"></div>
+           <div
+            class="xp-fill"
+            :style="{
+               width: `${Math.min((xp / 1000) * 100, 100)}%`
+            }"
+         ></div>
         </div>
 
         <p>Nächstes Level: <b>28</b></p>
-        <p>Benötigt: <b>533xp</b></p>
+        <p>
+          Benötigt:
+          <b>{{ Math.max(0, 1000 - xp) }}xp</b>
+        </p>
       </div>
 
     </section>
@@ -50,63 +58,63 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import rankingImage from '../assets/img/Ranking.jpeg'
+
+const xp = ref(
+  Number(localStorage.getItem('xp') || 467)
+)
 </script>
 
 <style scoped>
 .level-view {
-  max-width: 420px;
+  width: 95%;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 20px 60px;
+  padding: 0 20px 70px;
   color: white;
 }
 
 h1 {
-  font-size: 32px;
-  margin-bottom: 24px;
+  font-size: 42px;
+  margin-bottom: 32px;
 }
 
 .level-box {
   display: flex;
-  gap: 20px;
+  gap: 50px;
   align-items: center;
   border-bottom: 1px solid rgba(255,255,255,0.5);
-  padding-bottom: 25px;
+  padding-bottom: 35px;
 }
 
 .circle {
-  width: 150px;
-  height: 150px;
-  border: 8px solid rgba(255,255,255,0.8);
+  width: 220px;
+  height: 220px;
+  border: 10px solid rgba(255,255,255,0.8);
   border-radius: 50%;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   text-align: center;
   color: rgba(255,255,255,0.9);
 }
 
 .circle strong {
-  font-size: 58px;
+  font-size: 82px;
   line-height: 1;
-  margin: 4px 0;
+  margin: 6px 0;
 }
 
-.circle span:first-child {
-  font-size: 16px;
-  margin-bottom: 2px;
-}
-
+.circle span:first-child,
 .circle span:last-child {
-  font-size: 16px;
-  margin-top: 2px;
+  font-size: 24px;
 }
 
 .level-info {
   flex: 1;
+  font-size: 22px;
 }
 
 .level-info p {
@@ -115,9 +123,9 @@ h1 {
 }
 
 .xp-bar {
-  height: 4px;
+  height: 6px;
   background: rgba(255,255,255,0.3);
-  margin: 10px 0 20px;
+  margin: 14px 0 24px;
 }
 
 .xp-fill {
@@ -129,32 +137,88 @@ h1 {
 .history {
   text-align: center;
   border-bottom: 1px solid rgba(255,255,255,0.5);
-  padding: 30px 0;
+  padding: 45px 0;
 }
 
 .history h2 {
-  font-size: 52px;
-  margin-bottom: 25px;
+  font-size: 64px;
+  margin-bottom: 30px;
 }
 
 .history p {
-  font-size: 22px;
-  margin: 10px 0;
+  font-size: 26px;
+  margin: 12px 0;
 }
 
 .ranking {
-  padding-top: 25px;
+  padding-top: 35px;
 }
 
 .ranking h2 {
   text-align: center;
-  font-size: 52px;
-  margin-bottom: 20px;
+  font-size: 64px;
+  margin-bottom: 25px;
 }
 
 .ranking-image {
   width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
   border-radius: 0 0 25px 25px;
   display: block;
+}
+
+@media (max-width: 600px) {
+  .level-view {
+    width: 100%;
+    max-width: 420px;
+    padding: 0 20px 60px;
+  }
+
+  h1 {
+    font-size: 32px;
+    margin-bottom: 24px;
+  }
+
+  .level-box {
+    gap: 20px;
+    padding-bottom: 25px;
+  }
+
+  .circle {
+    width: 150px;
+    height: 150px;
+    border-width: 8px;
+  }
+
+  .circle strong {
+    font-size: 58px;
+  }
+
+  .circle span:first-child,
+  .circle span:last-child {
+    font-size: 16px;
+  }
+
+  .level-info {
+    font-size: 14px;
+  }
+
+  .history {
+    padding: 30px 0;
+  }
+
+  .history h2,
+  .ranking h2 {
+    font-size: 52px;
+  }
+
+  .history p {
+    font-size: 22px;
+  }
+
+  .ranking-image {
+    max-width: 100%;
+  }
 }
 </style>

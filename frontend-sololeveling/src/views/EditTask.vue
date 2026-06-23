@@ -72,28 +72,48 @@ onMounted(async () => {
   }
 })
 
+
 async function updateTask() {
   try {
-    await fetch(`http://127.0.0.1:3000/tasks/${route.params.id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name.value,
-        description: description.value,
-        type: type.value,
-        deadline: type.value === 'once' ? deadline.value : null,
-        interval: type.value === 'repeat' ? interval.value : null
-      })
-    })
+    const token = localStorage.getItem('token')
+
+    const res = await fetch(
+      `http://127.0.0.1:3000/tasks/${route.params.id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          name: name.value,
+          description: description.value,
+          type: type.value,
+          deadline: type.value === 'once'
+            ? deadline.value
+            : null,
+          interval: type.value === 'repeat'
+            ? interval.value
+            : null
+        })
+      }
+    )
+
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(data.error || 'Update fehlgeschlagen')
+    }
 
     alert('Task aktualisiert')
     router.push('/tasks')
 
   } catch (err) {
-    alert('Fehler beim Speichern')
     console.error(err)
+    alert(err.message || 'Fehler beim Speichern')
   }
 }
+
+
 
 async function deleteTask() {
   try {

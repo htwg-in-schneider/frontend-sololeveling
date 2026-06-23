@@ -2,7 +2,9 @@
   <div class="app">
     <Navbar />
 
-    <router-view />
+     <main class="main-content">
+       <router-view />
+     </main>
 
     <Footer />
   </div>
@@ -19,6 +21,13 @@ import Footer from './components/Footer.vue'
   width: 100%;
   background: linear-gradient(180deg, #500D87 0%, #2C064B 100%);
   color: white;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
 }
 
 html, body {

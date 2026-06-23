@@ -71,7 +71,10 @@ h2 {
 }
 
 label {
-  font-size: 14px;
+font-weight: bold;
+display: block;
+margin-bottom: 10px;
+font-size: 20px;
 }
 
 input {

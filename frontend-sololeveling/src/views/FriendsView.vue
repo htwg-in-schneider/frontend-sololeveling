@@ -97,36 +97,53 @@ import NellyImg from '../assets/img/Nelly.jpeg'
 
 const newFriendName = ref('')
 
-const friends = ref([
+const allFriends = [
   {
     name: 'Charlotte',
     level: 2,
     xp: 120,
     maxXp: 300,
-    image: CharlotteImg
+    image: CharlotteImg,
+    tasks: ['Abgabe', 'Blumen Gießen', 'Gym']
   },
   {
     name: 'Marlene',
     level: 13,
     xp: 780,
     maxXp: 1000,
-    image: MarleneImg
+    image: MarleneImg,
+    tasks: ['Lernen', 'Spazieren', 'Lesen']
   },
   {
     name: 'Nicki',
     level: 60,
     xp: 4500,
     maxXp: 5000,
-    image: NickiImg
+    image: NickiImg,
+    tasks: ['Training', 'Kochen', 'Aufräumen']
   },
   {
     name: 'Nelly',
     level: 20,
     xp: 1500,
     maxXp: 2000,
-    image: NellyImg
+    image: NellyImg,
+    tasks: ['Joggen', 'Lernen', 'Wäsche']
   }
-])
+]
+
+const savedNames = JSON.parse(localStorage.getItem('activeFriends')) || [
+  'Charlotte',
+  'Marlene',
+  'Nicki',
+  'Nelly'
+]
+
+const friends = ref(
+  allFriends.filter(friend =>
+    savedNames.includes(friend.name)
+  )
+)
 
 const me = {
   name: 'Ich',
@@ -163,10 +180,14 @@ const podiumRanking = computed(() => {
   ].filter(Boolean)
 })
 
+function saveFriends() {
+  const names = friends.value.map(friend => friend.name)
+  localStorage.setItem('activeFriends', JSON.stringify(names))
+}
+
 function removeFriend(name) {
-  friends.value = friends.value.filter(
-    friend => friend.name !== name
-  )
+  friends.value = friends.value.filter(friend => friend.name !== name)
+  saveFriends()
 }
 
 function sendRequest() {
@@ -223,6 +244,7 @@ function sendRequest() {
 
   if (!alreadyExists) {
     friends.value.push(friend)
+    saveFriends()
   }
 
   newFriendName.value = ''
@@ -231,7 +253,8 @@ function sendRequest() {
 
 <style scoped>
 .friends-view {
-  max-width: 420px;
+  width: 95%;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 0 18px 70px;
   color: white;
@@ -240,17 +263,17 @@ function sendRequest() {
 .friend-list {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 24px;
 }
 
 .friend-row {
   display: grid;
-  grid-template-columns: 60px 1fr 55px 95px;
-  gap: 12px;
+  grid-template-columns: 90px 1fr 80px 130px;
+  gap: 20px;
   align-items: center;
   cursor: pointer;
   border-radius: 18px;
-  padding: 4px;
+  padding: 8px;
   transition: 0.2s;
 }
 
@@ -259,8 +282,8 @@ function sendRequest() {
 }
 
 .friend-image {
-  width: 56px;
-  height: 56px;
+  width: 82px;
+  height: 82px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid white;
@@ -269,24 +292,25 @@ function sendRequest() {
 .friend-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .name {
-  font-size: 17px;
+  font-size: 22px;
   font-weight: bold;
 }
 
 .level-badge {
   border: 1px solid white;
   border-radius: 999px;
-  padding: 4px 6px;
+  padding: 6px 8px;
   text-align: center;
+  font-size: 14px;
 }
 
 .xp-bar {
   width: 100%;
-  height: 8px;
+  height: 10px;
   background: rgba(255,255,255,0.2);
   border-radius: 999px;
   overflow: hidden;
@@ -302,18 +326,19 @@ function sendRequest() {
   color: white;
   border: none;
   border-radius: 999px;
-  padding: 8px;
+  padding: 10px 14px;
   cursor: pointer;
+  font-size: 15px;
 }
 
 .add-friend {
-  margin-top: 30px;
-  padding-top: 20px;
+  margin-top: 40px;
+  padding-top: 24px;
 }
 
 .add-row {
   display: flex;
-  gap: 10px;
+  gap: 14px;
 }
 
 .add-row input {
@@ -322,7 +347,7 @@ function sendRequest() {
   border-radius: 25px;
   border: 1px solid white;
   outline: none;
-  font-size: 15px;
+  font-size: 16px;
   background: rgba(255, 255, 255, 0.2);
   color: white;
 }
@@ -330,12 +355,13 @@ function sendRequest() {
 .add-row button {
   border: none;
   border-radius: 999px;
-  padding: 10px 16px;
+  padding: 10px 18px;
   cursor: pointer;
+  font-size: 15px;
 }
 
 .ranking {
-  margin-top: 35px;
+  margin-top: 45px;
   text-align: center;
 }
 
@@ -343,17 +369,17 @@ function sendRequest() {
   display: flex;
   justify-content: center;
   align-items: flex-end;
-  gap: 18px;
-  min-height: 220px;
+  gap: 40px;
+  min-height: 280px;
 }
 
 .place {
-  width: 90px;
+  width: 120px;
 }
 
 .rank-number {
   display: block;
-  font-size: 26px;
+  font-size: 32px;
   font-weight: bold;
 }
 
@@ -370,30 +396,118 @@ function sendRequest() {
 }
 
 .podium-image {
-  width: 66px;
-  height: 66px;
+  width: 86px;
+  height: 86px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid white;
 }
 
 .first .bar {
-  height: 90px;
+  height: 120px;
   background: gold;
 }
 
 .second .bar {
-  height: 55px;
+  height: 75px;
   background: silver;
 }
 
 .third .bar {
-  height: 28px;
+  height: 45px;
   background: #cd7f32;
 }
 
 .bar {
-  width: 62px;
+  width: 82px;
   margin: 0 auto;
+}
+
+@media (max-width: 600px) {
+  .friends-view {
+    width: 100%;
+    max-width: 420px;
+    padding: 0 18px 70px;
+  }
+
+  .friend-list {
+    gap: 18px;
+  }
+
+  .friend-row {
+    grid-template-columns: 60px 1fr 55px 95px;
+    gap: 12px;
+    padding: 4px;
+  }
+
+  .friend-image {
+    width: 56px;
+    height: 56px;
+  }
+
+  .name {
+    font-size: 17px;
+  }
+
+  .level-badge {
+    padding: 4px 6px;
+    font-size: 11px;
+  }
+
+  .xp-bar {
+    height: 8px;
+  }
+
+  .friend-row button {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .add-row {
+    gap: 10px;
+  }
+
+  .add-row input {
+    font-size: 15px;
+  }
+
+  .add-row button {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+
+  .podium {
+    gap: 18px;
+    min-height: 220px;
+  }
+
+  .place {
+    width: 90px;
+  }
+
+  .rank-number {
+    font-size: 26px;
+  }
+
+  .podium-image {
+    width: 66px;
+    height: 66px;
+  }
+
+  .first .bar {
+    height: 90px;
+  }
+
+  .second .bar {
+    height: 55px;
+  }
+
+  .third .bar {
+    height: 28px;
+  }
+
+  .bar {
+    width: 62px;
+  }
 }
 </style>

@@ -2,12 +2,23 @@
   <div class="task-view">
     <div class="top">
       <h1>Deine Tasks</h1>
-      <button class="back" @click="$router.push('/')">Zurück</button>
+      
+    </div>
+
+
+    <div class="filters">
+     <input v-model="search" placeholder="Task suchen..." />
+
+      <select v-model="typeFilter">
+       <option value="all">Alle</option>
+       <option value="once">Einmalig</option>
+       <option value="repeat">Wiederholung</option>
+      </select>
     </div>
 
     <section class="task-list">
       <TaskCard
-        v-for="task in tasks"
+        v-for="task in filteredTasks"
         :key="task.id"
         :task="task"
         :show-actions="true"
@@ -25,6 +36,15 @@
 
       <label>Beschreibung:</label>
       <input v-model="description" />
+
+      <label> XP: </label>
+      <select v-model="xpReward">
+        <option :value="10">10 XP</option>
+        <option :value="20">20 XP</option>
+        <option :value="30">30 XP</option>
+        <option :value="40">40 XP</option>
+        <option :value="50">50 XP</option>
+      </select>
 
       <div class="type-buttons">
         <button
@@ -62,16 +82,31 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import TaskCard from '../components/TaskCard.vue'
 
 const tasks = ref([])
-
+const xpReward = ref(10)
 const name = ref('')
 const description = ref('')
 const type = ref('once')
 const deadline = ref('')
 const interval = ref('')
+
+const search = ref('')
+const typeFilter = ref('all')
+
+const filteredTasks = computed(() => {
+  return tasks.value.filter(task => {
+    const matchesSearch =
+      task.name?.toLowerCase().includes(search.value.toLowerCase())
+
+    const matchesType =
+      typeFilter.value === 'all' || task.type === typeFilter.value
+
+    return matchesSearch && matchesType
+  })
+})
 
 function parseDeadline(input) {
   const value = input.trim().toLowerCase()
@@ -92,7 +127,13 @@ function parseDeadline(input) {
 }
 
 async function loadTasks() {
-  const res = await fetch('http://127.0.0.1:3000/tasks')
+  const token = localStorage.getItem('token')
+
+const res = await fetch('http://127.0.0.1:3000/tasks', {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+})
   const data = await res.json()
   tasks.value = Array.isArray(data) ? data : (data.tasks || [])
 }
@@ -103,33 +144,54 @@ async function createTask() {
     description: description.value,
     type: type.value,
     deadline: type.value === 'once' ? parseDeadline(deadline.value) : null,
-    interval: type.value === 'repeat' ? interval.value : null
+    interval: type.value === 'repeat' ? interval.value : null,
+    xpReward: xpReward.value
   }
 
-  await fetch('http://127.0.0.1:3000/tasks', {
+  const token = localStorage.getItem('token')
+
+  const res = await fetch('http://127.0.0.1:3000/tasks', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`
+    },
     body: JSON.stringify(payload)
   })
+
+  if (!res.ok) {
+    const data = await res.json()
+    alert(data.error || 'Task konnte nicht erstellt werden')
+    return
+  }
+
+  const createdTask = await res.json()
+
+  const rewards = JSON.parse(localStorage.getItem('taskRewards') || '{}')
+  rewards[createdTask.id] = xpReward.value
+  localStorage.setItem('taskRewards', JSON.stringify(rewards))
+
+  tasks.value = [createdTask, ...tasks.value]
 
   name.value = ''
   description.value = ''
   deadline.value = ''
   interval.value = ''
-
-  await loadTasks()
+  xpReward.value = 10
 }
 
 function removeTask(id) {
   tasks.value = tasks.value.filter(task => task.id !== id)
 }
 
+
 onMounted(loadTasks)
 </script>
 
 <style scoped>
 .task-view {
-  max-width: 420px;
+  width: 95%;
+  max-width: 1400px;
   margin: 0 auto;
   min-height: 100vh;
   padding: 24px 16px 80px;
@@ -143,7 +205,7 @@ onMounted(loadTasks)
 }
 
 h1 {
-  font-size: 32px;
+  font-size: 42px;
   text-decoration: underline;
 }
 
@@ -157,50 +219,59 @@ h1 {
 .task-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 .create-box {
-  margin-top: 22px;
+  margin-top: 34px;
   border-top: 2px solid rgba(255,255,255,0.5);
-  padding-top: 12px;
+  padding-top: 24px;
   display: grid;
-  grid-template-columns: 1fr 120px;
-  gap: 8px 14px;
+  grid-template-columns: 220px 1fr;
+  gap: 18px 30px;
   align-items: center;
 }
 
 .create-box h2 {
   grid-column: 1 / -1;
   text-align: center;
-  font-size: 34px;
-  margin: 0;
+  font-size: 44px;
+  margin: 0 0 10px;
 }
 
 label {
   font-weight: bold;
+  font-size: 20px;
 }
 
 input {
+  width: 100%;
+  box-sizing: border-box;
   border-radius: 999px;
   border: 1px solid white;
-  padding: 8px 12px;
+  padding: 16px 20px;
   background: rgba(255,255,255,0.2);
   color: white;
+  font-size: 18px;
 }
 
 .type-buttons {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  width: 250px;
+  justify-self: start;
+
+  gap: 10px;
 }
 
 .type-buttons button,
 .create-btn {
+  width: 220px;
   border: none;
   border-radius: 999px;
-  padding: 8px 14px;
+  padding: 12px 18px;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .type-buttons .active {
@@ -214,5 +285,73 @@ input {
   background: white;
   color: #500d87;
   font-weight: bold;
+}
+
+.filters {
+  display: flex;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.filters input,
+.filters select {
+  padding: 12px 18px;
+  border-radius: 999px;
+  border: 1px solid white;
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.filters select {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+.filters select option {
+  background: #2c064b;
+  color: white;
+}
+
+@media (max-width: 600px) {
+  .task-view {
+    width: 100%;
+    max-width: 420px;
+    padding: 24px 16px 80px;
+  }
+
+  h1 {
+    font-size: 32px;
+  }
+
+  .create-box {
+    grid-template-columns: 120px;
+    gap: 12px;
+  }
+
+  .create-box h2 {
+    font-size: 34px;
+  }
+
+  label {
+    font-size: 16px;
+  }
+
+  input {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+
+  .type-buttons button{
+    padding: 8px 14px;
+    font-size: 14px;
+    width: 100%;
+
+  }
+  .create-btn {
+    padding: 8px 14px;
+    font-size: 14px;
+    width: 100%;
+    grid-column: 1;
+  }
 }
 </style>

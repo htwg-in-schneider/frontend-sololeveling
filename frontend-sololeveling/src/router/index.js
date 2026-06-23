@@ -15,6 +15,7 @@ import FriendsView from '../views/FriendsView.vue'
 import LevelView from '../views/LevelView.vue'
 import SettingsView from '../views/SettingsView.vue'
 import FriendTasksView from '../views/FriendTasksView.vue'
+import AdminView from '../views/AdminView.vue'
 
 const routes = [
   {
@@ -91,13 +92,38 @@ const routes = [
   path: '/friends/:name/tasks',
   name: 'friend-tasks',
   component: FriendTasksView
+},
+{
+  path: '/admin',
+  name: 'admin',
+  component: AdminView,
+  meta: { requiresAuth: true, requiresAdmin: true }
 }
 
 ]
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+
+scrollBehavior() {
+    return {
+      top: 0
+    }
+  }
+})
+
+router.beforeEach((to) => {
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true'
+  const role = localStorage.getItem('role')
+
+  if (to.meta.requiresAuth && !isLoggedIn) {
+    return '/login'
+  }
+
+  if (to.meta.requiresAdmin && role !== 'admin') {
+    return '/dashboard'
+  }
 })
 
 export default router

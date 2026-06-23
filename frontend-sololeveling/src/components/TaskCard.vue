@@ -24,8 +24,9 @@
   </div>
 </template>
 
+
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 
 const props = defineProps({
@@ -42,10 +43,6 @@ const router = useRouter()
 
 const isDone = ref(props.task.done || false)
 
-function toggleDone() {
-  isDone.value = !isDone.value
-}
-
 const isExpired = computed(() => {
   if (isDone.value) return false
   if (!props.task.deadline) return false
@@ -54,6 +51,7 @@ const isExpired = computed(() => {
 })
 
 const displayTime = computed(() => {
+  
   if (props.task.interval_field === 'daily') return 'd'
   if (props.task.interval_field === 'weekly') return 'w'
 
@@ -74,7 +72,29 @@ const displayTime = computed(() => {
   return `${seconds}s`
 })
 
+onMounted(() => {
+  const penaltyKey = `penalty-task-${props.task.id}`
 
+  if (isExpired.value && !isDone.value && !localStorage.getItem(penaltyKey)) {
+    const xp = Number(localStorage.getItem('xp') || 467)
+
+    localStorage.setItem('xp', Math.max(0, xp - 25))
+    localStorage.setItem(penaltyKey, 'true')
+  }
+})
+
+function toggleDone() {
+  const newDone = !isDone.value
+  isDone.value = newDone
+
+  if (newDone) {
+    const currentXp = Number(localStorage.getItem('xp') || 467)
+    const rewards = JSON.parse(localStorage.getItem('taskRewards') || '{}')
+    const reward = Number(rewards[props.task.id] || 10)
+
+    localStorage.setItem('xp', currentXp + reward)
+  }
+}
 
 function goToEdit(id) {
   router.push(`/task/edit/${id}`)
@@ -82,11 +102,21 @@ function goToEdit(id) {
 
 async function deleteTask(id) {
   try {
-    const res = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
-      method: 'DELETE'
-    })
+    const token = localStorage.getItem('token')
 
-    if (!res.ok) throw new Error('Delete failed')
+    const res = await fetch(
+      `http://127.0.0.1:3000/tasks/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+
+    if (!res.ok) {
+      throw new Error('Delete failed')
+    }
 
     emit('deleted', id)
   } catch (err) {
@@ -95,6 +125,7 @@ async function deleteTask(id) {
   }
 }
 </script>
+
 
 <style scoped>
 .task-row {

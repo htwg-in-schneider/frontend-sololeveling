@@ -21,10 +21,10 @@
     <section class="task-list">
       <div
         v-for="task in currentFriend.tasks"
-        :key="task.name"
+        :key="task"
         class="task-row"
       >
-        <span>{{ task.name }}</span>
+        <span>{{ task }}</span>
 
         <button
           class="circle"
@@ -46,7 +46,7 @@ import MarleneImg from '../assets/img/Marlene.jpeg'
 import NickiImg from '../assets/img/Nicki.jpeg'
 import NellyImg from '../assets/img/Nelly.jpeg'
 
-const currentIndex = ref(0)
+
 
 const friends = [
   {
@@ -82,6 +82,16 @@ const friends = [
     tasks: ['Tägliches Training', 'Blumen Gießen', 'Lernen', 'Ein Buch lesen', 'Spazieren']
   }
 ]
+
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const startIndex = friends.findIndex(friend =>
+  friend.name.toLowerCase() === route.params.name.toLowerCase()
+)
+
+const currentIndex = ref(startIndex >= 0 ? startIndex : 0)
 
 const currentFriend = computed(() => {
   return friends[currentIndex.value]

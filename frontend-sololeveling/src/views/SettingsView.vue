@@ -1,20 +1,49 @@
 <template>
   <div class="settings-view">
-
-    <section class="settings-card">
-      <h1>Passwort<br />ändern</h1>
-
-      <label>Altes Passwort:</label>
-      <input v-model="oldPassword" type="password" />
-
-      <label>Neues Passwort:</label>
-      <input v-model="newPassword" type="password" />
-
-      <button @click="changePassword">
-        Ändern
+    <section class="setting-box">
+      <button class="setting-title" @click="openPanel = openPanel === 'password' ? '' : 'password'">
+        Passwort ändern
       </button>
 
-      <button class="delete" @click="deleteAccount">
+      <div v-if="openPanel === 'password'" class="setting-content">
+        <label>Altes Passwort:</label>
+        <input v-model="oldPassword" type="password" />
+
+        <label>Neues Passwort:</label>
+        <input v-model="newPassword" type="password" />
+
+        <button class="dark-btn" @click="changePassword">Ändern</button>
+      </div>
+    </section>
+
+    <section class="setting-box">
+      <button class="setting-title" @click="openPanel = openPanel === 'email' ? '' : 'email'">
+        Email ändern
+      </button>
+
+      <div v-if="openPanel === 'email'" class="setting-content">
+        <label>Neue Email:</label>
+        <input v-model="email" type="email" />
+
+        <button class="dark-btn" @click="changeEmail">Ändern</button>
+      </div>
+    </section>
+
+    <section class="setting-box">
+      <button class="setting-title" @click="openPanel = openPanel === 'username' ? '' : 'username'">
+        Benutzernamen ändern
+      </button>
+
+      <div v-if="openPanel === 'username'" class="setting-content">
+        <label>Neuer Benutzername:</label>
+        <input v-model="username" type="text" />
+
+        <button class="dark-btn" @click="changeUsername">Ändern</button>
+      </div>
+    </section>
+
+    <section class="setting-box">
+      <button class="setting-title delete-title" @click="deleteAccount">
         Konto Löschen
       </button>
     </section>
@@ -30,14 +59,10 @@
           :class="{ selected: selectedAvatar === avatar.name }"
           @click="selectAvatar(avatar.name)"
         >
-          <img
-            :src="avatar.image"
-            :alt="avatar.name"
-          />
+          <img :src="avatar.image" :alt="avatar.name" />
         </button>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -53,8 +78,11 @@ import BildImg from '../assets/img/Bild.jpeg'
 
 const router = useRouter()
 
+const openPanel = ref('')
 const oldPassword = ref('')
 const newPassword = ref('')
+const email = ref('')
+const username = ref('')
 const selectedAvatar = ref('')
 
 const avatars = [
@@ -66,13 +94,9 @@ const avatars = [
 ]
 
 onMounted(() => {
-  const savedAvatar = localStorage.getItem('selectedAvatar')
-
-  if (savedAvatar) {
-    selectedAvatar.value = savedAvatar
-  } else {
-    selectedAvatar.value = 'Bild'
-  }
+  selectedAvatar.value = localStorage.getItem('selectedAvatar') || 'Bild'
+  email.value = localStorage.getItem('email') || ''
+  username.value = localStorage.getItem('username') || ''
 })
 
 function selectAvatar(name) {
@@ -87,18 +111,37 @@ function changePassword() {
   }
 
   alert('Passwort wurde geändert')
-
   oldPassword.value = ''
   newPassword.value = ''
+  openPanel.value = ''
+}
+
+function changeEmail() {
+  if (!email.value) {
+    alert('Bitte Email eingeben')
+    return
+  }
+
+  localStorage.setItem('email', email.value)
+  alert('Email wurde geändert')
+  openPanel.value = ''
+}
+
+function changeUsername() {
+  if (!username.value) {
+    alert('Bitte Benutzernamen eingeben')
+    return
+  }
+
+  localStorage.setItem('username', username.value)
+  alert('Benutzername wurde geändert')
+  openPanel.value = ''
 }
 
 function deleteAccount() {
   if (confirm('Möchtest du dein Konto wirklich löschen?')) {
-
-    localStorage.removeItem('selectedAvatar')
-
+    localStorage.clear()
     alert('Konto wurde gelöscht')
-
     router.push('/')
   }
 }
@@ -106,47 +149,61 @@ function deleteAccount() {
 
 <style scoped>
 .settings-view {
-  max-width: 420px;
+  width: 95%;
+  max-width: 900px;
   margin: 0 auto;
   padding: 40px 20px 90px;
   color: white;
 }
 
-.settings-card {
-  width: 260px;
-  margin: 0 auto;
-  padding: 35px 32px;
+.setting-box {
+  max-width: 520px;
+  margin: 0 auto 22px;
   background: #d9d9d9;
   color: black;
-  border-radius: 42px;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.setting-title {
+  width: 100%;
+  padding: 18px 24px;
+  border: none;
+  background: transparent;
+  color: #500d87;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+.delete-title {
+  color: black;
+}
+
+.setting-content {
+  padding: 10px 48px 32px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.settings-card h1 {
-  color: #500d87;
-  font-size: 28px;
-  margin: 0 0 35px;
-  text-shadow: 0 10px 20px rgba(0,0,0,0.35);
-}
-
-.settings-card label {
-  font-size: 17px;
+.setting-content label {
+  font-size: 18px;
   font-weight: bold;
 }
 
-.settings-card input {
-  padding: 9px 14px;
+.setting-content input {
+  padding: 11px 16px;
   border-radius: 999px;
   border: 1px solid black;
   background: transparent;
   font-size: 16px;
 }
 
-.settings-card button {
-  margin-top: 10px;
-  padding: 10px;
+.dark-btn {
+  margin-top: 14px;
+  padding: 12px;
   border: none;
   border-radius: 999px;
   background: #3b333b;
@@ -154,10 +211,6 @@ function deleteAccount() {
   font-size: 24px;
   font-weight: bold;
   cursor: pointer;
-}
-
-.settings-card .delete {
-  margin-top: 12px;
 }
 
 .profile-section {
@@ -170,15 +223,15 @@ function deleteAccount() {
   background: #d9d9d9;
   color: black;
   border-radius: 999px;
-  padding: 8px 20px;
-  margin-bottom: 24px;
-  font-size: 25px;
+  padding: 12px 28px;
+  margin-bottom: 28px;
+  font-size: 28px;
 }
 
 .avatars {
   display: flex;
   justify-content: center;
-  gap: 14px;
+  gap: 18px;
   flex-wrap: wrap;
 }
 
@@ -191,8 +244,8 @@ function deleteAccount() {
 }
 
 .avatar-button img {
-  width: 58px;
-  height: 58px;
+  width: 66px;
+  height: 66px;
   border-radius: 50%;
   object-fit: cover;
   border: 4px solid white;
@@ -201,5 +254,27 @@ function deleteAccount() {
 .avatar-button.selected img {
   border: 6px solid #b00000;
 }
-</style>
 
+.setting-box:has(.setting-content) {
+  border-radius: 42px;
+}
+
+@media (max-width: 600px) {
+  .setting-title {
+    font-size: 22px;
+  }
+
+  .setting-content {
+    padding: 10px 28px 28px;
+  }
+
+  .profile-section h2 {
+    font-size: 23px;
+  }
+
+  .avatar-button img {
+    width: 58px;
+    height: 58px;
+  }
+}
+</style>

@@ -81,29 +81,59 @@ async function createTask() {
     name: name.value,
     description: description.value,
     type: type.value,
-    deadline: type.value === 'once' ? parseDeadline(deadline.value) : null,
-    interval: type.value === 'repeat' ? interval.value : null
+    deadline: type.value === 'once'
+      ? parseDeadline(deadline.value)
+      : null,
+    interval: type.value === 'repeat'
+      ? interval.value
+      : null
   }
 
   try {
-    await fetch('http://127.0.0.1:3000/tasks', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    })
+    const token = localStorage.getItem('token')
+
+    const res = await fetch(
+      'http://127.0.0.1:3000/tasks',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify(payload)
+      }
+    )
+
+    if (!res.ok) {
+      const data = await res.json()
+      throw new Error(
+        data.error || 'Task konnte nicht erstellt werden'
+      )
+    }
+
+    const createdTask = await res.json()
+
+    tasks.value.unshift(createdTask)
+
+    name.value = ''
+    description.value = ''
+    deadline.value = ''
+    interval.value = ''
+    xpReward.value = 10
 
     alert('Task erstellt')
     router.push('/tasks')
-    
-  } catch (err) {
-  console.error('CREATE TASK FEHLER:', err)
 
-  alert(
-    'Fehler beim Erstellen\n\n' +
-    (err?.message || 'Unbekannter Fehler')
-  )
+  } catch (err) {
+    console.error('CREATE TASK FEHLER:', err)
+
+    alert(
+      'Fehler beim Erstellen\n\n' +
+      (err.message || 'Unbekannter Fehler')
+    )
   }
 }
+
 </script>
 
 <style scoped>
