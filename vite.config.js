@@ -12,9 +12,7 @@ export default defineConfig({
     vueJsx(),
     vueDevTools(),
   ],
-  base: process.env.NODE_ENV === 'production'
-  ? '/frontend-sololeveling/'
-  : './',
+  base: '/frontend-sololeveling/',
 
   resolve: {
     alias: {
