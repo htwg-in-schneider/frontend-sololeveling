@@ -119,7 +119,7 @@ onMounted(async () => {
   try {
    const token = localStorage.getItem('token')
 
-   const res = await fetch('http://127.0.0.1:3000/tasks', {
+   const res = await fetch('https://backend-sololeveling.onrender.com/tasks', {
   headers: {
     Authorization: `Bearer ${token}`
   }

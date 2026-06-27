@@ -58,7 +58,7 @@ const interval = ref('')
 
 onMounted(async () => {
   try {
-    const res = await fetch(`http://127.0.0.1:3000/tasks/${route.params.id}`)
+    const res = await fetch(`https://backend-sololeveling.onrender.com/tasks/${route.params.id}`)
     const data = await res.json()
 
     name.value = data.name
@@ -78,7 +78,7 @@ async function updateTask() {
     const token = localStorage.getItem('token')
 
     const res = await fetch(
-      `http://127.0.0.1:3000/tasks/${route.params.id}`,
+      `https://backend-sololeveling.onrender.com/tasks/${route.params.id}`,
       {
         method: 'PUT',
         headers: {
@@ -117,7 +117,7 @@ async function updateTask() {
 
 async function deleteTask() {
   try {
-    await fetch(`http://127.0.0.1:3000/tasks/${route.params.id}`, {
+    await fetch(`https://backend-sololeveling.onrender.com/tasks/${route.params.id}`, {
       method: 'DELETE'
     })
 

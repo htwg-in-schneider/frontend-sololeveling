@@ -43,7 +43,7 @@ const error = ref('')
 
 async function login() {
   try {
-    const res = await fetch('http://127.0.0.1:3000/login', {
+    const res = await fetch('https://backend-sololeveling.onrender.com/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

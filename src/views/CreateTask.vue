@@ -93,7 +93,7 @@ async function createTask() {
     const token = localStorage.getItem('token')
 
     const res = await fetch(
-      'http://127.0.0.1:3000/tasks',
+      'https://backend-sololeveling.onrender.com/tasks',
       {
         method: 'POST',
         headers: {

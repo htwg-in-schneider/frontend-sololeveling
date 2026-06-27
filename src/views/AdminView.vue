@@ -122,7 +122,7 @@ const filteredCurrentPersonTasks = computed(() => {
 })
 
 async function loadTasks() {
-  const res = await fetch('http://127.0.0.1:3000/admin/tasks', {
+  const res = await fetch('https://backend-sololeveling.onrender.com/admin/tasks', {
     headers: {
       Authorization: `Bearer ${token()}`
     }
@@ -132,7 +132,7 @@ async function loadTasks() {
 }
 
 async function loadUsers() {
-  const res = await fetch('http://127.0.0.1:3000/admin/users', {
+  const res = await fetch('https://backend-sololeveling.onrender.com/admin/users', {
     headers: {
       Authorization: `Bearer ${token()}`
     }
@@ -142,7 +142,7 @@ async function loadUsers() {
 }
 
 async function loadFriendTasks() {
-  const res = await fetch('http://127.0.0.1:3000/admin/friend-tasks', {
+  const res = await fetch('https://backend-sololeveling.onrender.com/admin/friend-tasks', {
     headers: {
       Authorization: `Bearer ${token()}`
     }
@@ -220,8 +220,8 @@ function previousPerson() {
 async function saveAnyTask(task) {
   const url =
     task.source === 'user'
-      ? `http://127.0.0.1:3000/admin/tasks/${task.id}`
-      : `http://127.0.0.1:3000/admin/friend-tasks/${task.id}`
+      ? `https://backend-sololeveling.onrender.com/admin/tasks/${task.id}`
+      : `https://backend-sololeveling.onrender.com/admin/friend-tasks/${task.id}`
 
   await fetch(url, {
     method: 'PUT',
@@ -238,8 +238,8 @@ async function saveAnyTask(task) {
 async function deleteAnyTask(task) {
   const url =
     task.source === 'user'
-      ? `http://127.0.0.1:3000/admin/tasks/${task.id}`
-      : `http://127.0.0.1:3000/admin/friend-tasks/${task.id}`
+      ? `https://backend-sololeveling.onrender.com/admin/tasks/${task.id}`
+      : `https://backend-sololeveling.onrender.com/admin/friend-tasks/${task.id}`
 
   await fetch(url, {
     method: 'DELETE',
@@ -262,7 +262,7 @@ async function deleteAnyTask(task) {
 
 async function saveUser(user) {
   await fetch(
-    `http://127.0.0.1:3000/admin/users/${user.id}`,
+    `https://backend-sololeveling.onrender.com/admin/users/${user.id}`,
     {
       method: 'PUT',
       headers: {
@@ -278,7 +278,7 @@ async function saveUser(user) {
 
 async function deleteUser(user) {
   await fetch(
-    `http://127.0.0.1:3000/admin/users/${user.id}`,
+    `https://backend-sololeveling.onrender.com/admin/users/${user.id}`,
     {
       method: 'DELETE',
       headers: {

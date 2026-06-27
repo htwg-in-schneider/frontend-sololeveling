@@ -116,7 +116,7 @@ async function addTask(taskName) {
   }
 
   try {
-    await fetch('http://127.0.0.1:3000/tasks', {
+    await fetch('https://backend-sololeveling.onrender.com/tasks', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)

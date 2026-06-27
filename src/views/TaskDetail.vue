@@ -26,7 +26,7 @@ const route = useRoute()
 const product = ref(null)
 
 onMounted(async () => {
-  const res = await fetch(`http://127.0.0.1:3000/tasks/${route.params.id}`)
+  const res = await fetch(`https://backend-sololeveling.onrender.com/tasks/${route.params.id}`)
   product.value = await res.json()
 })
 </script>

@@ -129,7 +129,7 @@ function parseDeadline(input) {
 async function loadTasks() {
   const token = localStorage.getItem('token')
 
-const res = await fetch('http://127.0.0.1:3000/tasks', {
+const res = await fetch('https://backend-sololeveling.onrender.com/tasks', {
   headers: {
     Authorization: `Bearer ${token}`
   }
@@ -150,7 +150,7 @@ async function createTask() {
 
   const token = localStorage.getItem('token')
 
-  const res = await fetch('http://127.0.0.1:3000/tasks', {
+  const res = await fetch('https://backend-sololeveling.onrender.com/tasks', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

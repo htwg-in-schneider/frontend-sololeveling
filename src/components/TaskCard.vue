@@ -105,7 +105,7 @@ async function deleteTask(id) {
     const token = localStorage.getItem('token')
 
     const res = await fetch(
-      `http://127.0.0.1:3000/tasks/${id}`,
+      `https://backend-sololeveling.onrender.com/tasks/${id}`,
       {
         method: 'DELETE',
         headers: {
